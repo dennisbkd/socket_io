@@ -1,5 +1,6 @@
 import express from 'express'
 import logger from 'morgan'
+import path from 'node:path'
 
 import { Server } from 'socket.io'
 import { createServer } from 'node:http'
@@ -25,11 +26,12 @@ io.on('connection', (socket) => {
     io.emit('chat message', msg)
   })
 })
-
+const clientPath = path.join(process.cwd(), 'client')
+app.use(express.static(clientPath))
 app.use(logger('dev'))
 
 app.get('/', (req, res) => {
-  res.sendFile(process.cwd() + '/client/index.html')
+  res.sendFile(path.join(clientPath, 'index.html'))
 })
 
 server.listen(port, () => {
